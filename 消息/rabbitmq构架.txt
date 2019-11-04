@@ -1,0 +1,42 @@
+Broker： 简单来说就是消息队列服务器实体
+
+Exchange： 消息交换机，它指定消息按什么规则，路由到哪个队列
+
+Queue： 消息队列载体，每个消息都会被投入到一个或多个队列
+
+Binding： 绑定，它的作用就是把exchange和queue按照路由规则绑定起来
+
+Routing Key： 路由关键字，exchange根据这个关键字进行消息投递
+
+VHost： 虚拟主机，一个broker里可以开设多个vhost，用作不同用户的权限分离。
+
+Producer： 消息生产者，就是投递消息的程序
+
+Consumer： 消息消费者，就是接受消息的程序
+
+Channel： 消息通道，在客户端的每个连接里，可建立多个channel，每个channel代表一个会话任务
+
+
+
+RabbitMQ常用的Exchange Type有fanout、direct、topic、headers这四种
+
+fanout
+fanout类型的Exchange路由规则非常简单，它会把所有发送到该Exchange的消息路由到所有与它绑定的Queue中
+
+direct类型的Exchange路由规则也很简单，它会把消息路由到那些Binding key与Routing key完全匹配的Queue中。
+
+topic
+前面讲到direct类型的Exchange路由规则是完全匹配Binding Key与Routing Key，但这种严格的匹配方式在很多情况下不能满足实际业务需求。topic类型的Exchange在匹配规则上进行了扩展，它与direct类型的Exchage相似，也是将消息路由到Binding Key与Routing Key相匹配的Queue中，但这里的匹配规则有些不同，它约定：
+Routing Key为一个句点号“.”分隔的字符串（我们将被句点号". "分隔开的每一段独立的字符串称为一个单词），如"stock.usd.nyse"、"nyse.vmw"、"quick.orange.rabbit"。Binding Key与Routing Key一样也是句点号“. ”分隔的字符串。
+
+headers
+headers类型的Exchange不依赖于Routing Key与Binding Key的匹配规则来路由消息，而是根据发送的消息内容中的headers属性进行匹配。
+
+
+
+RPC
+MQ本身是基于异步的消息处理，前面的示例中所有的生产者（P）将消息发送到RabbitMQ后不会知道消费者（C）处理成功或者失败（甚至连有没有消费者来处理这条消息都不知道）。
+
+
+RabbitMQ中实现RPC的机制是：
+客户端发送请求（消息）时，在消息的属性（Message Properties，在AMQP协议中定义了14种properties，这些属性会随着消息一起发送）中设置两个值replyTo（一个Queue名称，用于告诉服务器处理完成后将通知我的消息发送到这个Queue中）和correlationId（此次请求的标识号，服务器处理完成后需要将此属性返还，客户端将根据这个id了解哪条请求被成功执行了或执行失败）。服务器端收到消息处理完后，将生成一条应答消息到replyTo指定的Queue，同时带上correlationId属性。客户端之前已订阅replyTo指定的Queue，从中收到服务器的应答消息后，根据其中的correlationId属性分析哪条请求被执行了，根据执行结果进行后续业务处理

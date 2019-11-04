@@ -1,0 +1,124 @@
+volatile    修饰的成员变量在每次被线程访问时，都强迫从共享内存中重读该成员变量的值。而且，当成员变量发生变化时，强迫线程将变化值回写到共享内存。这样在任何时刻，两个不同的线程总是看到某个成员变量的同一个值。
+
+ThreadLocal是线程本地变量，每个线程往这个ThreadLocal中读写是线程隔离，互相之间不会影响的。它提供了一种将可变数据通过每个线程有自己的独立副本从而实现线程封闭的机制。
+
+
+一.并发工具概述
+        1.传统的多线程并没有提供高级特性，例如：信号量、线程池和执行管理器等，而这些特性恰恰有助于创建强大的并发程序。
+        2.新的Fork/Join框架针对当前的多核系统，也提供了并行编程的可行性。
+        3.并发工具包处理于java.util.concurrent包，主要包括同步器、执行顺、并发集合、Fork/Join框架、atomic包、locks包。
+        4.同步器：为每种特定的同步问题提供了解决方案
+        5.执行器：用来管理线程的执行
+        6.并发集合：提供了集合框架中集合的并发版本
+        7.Fork/Join框架：提供了对并行编程的支持
+        8.atomic包：提供了不需要锁即可完成并发环境变量使用的原子性操作
+        9.locks包：使用Lock接口为并发编程提供了同步的另外一种替代方案
+
+
+四.执行器
+1.执行器
+        a.用于启动并控制线程的执行
+        b.核心接口为Executor，包含一个execute(Runnable)用于指定被执行的线程
+        c.ExecutorService接口用于控制线程执行和管理线程
+        d.预定义了如下执行器：ThreadPoolExecutor/ScheduledThreadPoolExecutor/ForkJoinPool
+2.Callable与Future
+        a.Callable<V>：表示具有返回值的线程，V：表示返回值类型
+        b.call()：执行任务
+        c.Future<V>：表示Callable的返回值，V：返回值类型
+        d.get()：获取返回值
+
+
+
+五.锁与原子操作
+1.锁
+        a.java.util.concurrent.lock包中提供了对锁的支持
+        b.为使用synchronized控制对资源访问提供了替代机制
+        c.基本操作模型：访问资源之前申请锁，访问完毕后释放锁
+        d.lock/tryLock：申请锁
+        e.unlock：释放锁
+        f.具体锁类ReentrantLock实现了Lock接口
+
+2.原子操作
+        a.java.util.concurrent.atom包中提供了对原子操作的支持
+        b.提供了不需要锁以及其他同步机制就可以进行的一些不可中断操作
+        c.主要操作为：获取、设置、比较等
+
+六.流编程
+1.流的基本知识
+        a.表示数据移动，移动过程中可能会对数据进行处理
+        b.不同于IO流，表示流对象
+        c.操作分为中间操作和终端操作
+        d.中间操作会产生一个新流
+        e.终端操作会消费流
+2.流的编程模型
+        a.获取流：stream/parallelSteam(获取串行流/并行流)
+        b.操作：sort/max/min/...
+3.流的基本操作
+        过滤、排序、缩减、映射、收集、迭代
+
+
+七.Fork/Join框架
+1. Fork/Join框架中的主要类
+        a.ForkJoinTask<V>：描述任务的抽象类
+        b.ForkJoinPool：管理ForkJoinTask的线程池
+        c.RecursiveAction：ForkJoinTask子类，描述无返回值的任务
+        d.RecursiveTask<V>：ForkJoinTask子类，描述有返回值的任务
+        ForkJoinWorkerThread
+ 
+2.分而治之策略
+        a.将任务递归划分成更小的子任务，直到子任务足够小，从而能够被连续地处理掉为止
+        b.优势是处理过程可以使用并行发生，这种情况特别适合基于多核处理器的并行编程
+        c.根据Java API中定义，分而治之的建议临界点定义在100-1000个操作中的某个位置
+
+
+Condition condition = lock.newCondition(); //产生一个Condition对象
+ condition.await() ; 
+  condition.signal();
+
+ReentrantReadWriteLock 在沒有任何读写锁时，才可以取得写入锁，这可用于实现了悲观读取（Pessimistic Reading），即如果执行中进行读取时，经常可能有另一执行要写入的需求，为了保持同步，ReentrantReadWriteLock 的读取锁定就可派上用场。
+
+然而，如果读取执行情况很多，写入很少的情况下，使用 ReentrantReadWriteLock 可能会使写入线程遭遇饥饿（Starvation）问题，也就是写入线程吃吃无法竞争到锁定而一直处于等待状态。
+
+StampedLock控制锁有三种模式（写，读，乐观读），一个StampedLock状态是由版本和模式两个部分组成，锁获取方法返回一个数字作为票据stamp，它用相应的锁状态表示并控制访问，数字0表示没有写锁被授权访问。在读锁上分为悲观锁和乐观锁。
+
+
+                              
+
+
+
+1. Semaphore 信号量是一类经典的同步工具。信号量通常用来限制线程可以同时访问的（物理或逻辑）资源数量。
+
+2.CountDownLatch 一种非常简单、但很常用的同步辅助类。其作用是在完成一组正在其他线程中执行的操作之前,允许一个或多个线程一直阻塞。
+
+3.CyclicBarrier 一种可重置的多路同步点，在某些并发编程场景很有用。它允许一组线程互相等待，直到到达某个公共的屏障点 (common barrier point)。在涉及一组固定大小的线程的程序中，这些线程必须不时地互相等待，此时 CyclicBarrier 很有用。因为该 barrier在释放等待线程后可以重用，所以称它为循环的barrier。
+
+4.Phaser 一种可重用的同步屏障，功能上类似于CyclicBarrier和CountDownLatch，但使用上更为灵活。非常适用于在多线程环境下同步协调分阶段计算任务（Fork/Join框架中的子任务之间需同步时，优先使用Phaser）
+Phaser表示“阶段器”，用来解决控制多个线程分阶段共同完成任务的情景问题。其作用相比CountDownLatch和CyclicBarrier更加灵活，例如有这样的一个题目：5个学生一起参加考试，一共有三道题，要求所有学生到齐才能开始考试，全部同学都做完第一题，学生才能继续做第二题
+
+
+5.Exchanger 允许两个线程在某个汇合点交换对象，在某些管道设计时比较有用。Exchanger提供了一个同步点，在这个同步点，一对线程可以交换数据。每个线程通过exchange()方法的入口提供数据给他的伙伴线程，并接收他的伙伴线程提供的数据并返回。当两个线程通过Exchanger交换了对象，这个交换对于两个线程来说都是安全的。Exchanger可以认为是 SynchronousQueue 的双向形式，在运用到遗传算法和管道设计的应用中比较有用。
+
+
+CountDownLatch：倒计时锁CountDownLatch类是一个同步计数器,构造时传入int参数,该参数就是计数器的初始值，每调用一次countDown()方法，计数器减1,计数器大于0 时，await()方法会阻塞程序继续执行。 CountDownLatch可以看作是一个倒计数的锁存器，当计数减至0时触发特定的事件。利用这种特性，可以让主线程等待子线程的结束。
+
+Semaphore：信号量
+ Semaphore当前在多线程环境下被扩放使用，操作系统的信号量是个很重要的概念，在进程控制方面都有应用。Java 并发库 的Semaphore 可以很轻松完成信号量控制，Semaphore可以控制某个资源可被同时访问的个数，通过 acquire() 获取一个许可，如果没有就等待，而 release() 释放一个许可。比如在Windows下可以设置共享文件的最大客户端访问个数。 
+
+
+CyclicBarrier：循环栅栏              所有线程必须同时到达栅栏位置，才能继续执行
+CyclicBarrier只需要调用await()让线程等待，当调用await()方法的线程数满足条件，就自动唤醒所有线程往下执行
+
+
+Exchanger：交互栅栏
+它是一种比较特殊的两方(Two-Party)栅栏，可以理解成Exchanger是一个栅栏，两边一方是生产者，一方是消费者，
+1. 生产者和消费者各自维护了一个容器，生产者往容器里生产东西，消费者从容器里消费东西。
+2. 当生产者的容器是满的时候，它需要通过Exchanger向消费者交换，把满的容器交换给消费者，从消费者手里拿到空的容器继续生产。
+3. 当消费者的容器是空的时候，它需要通过Exchanger向生产者交换，把空的容器交换给生产者，从生产者手里拿到满的容器继续消费。
+
+
+CountDownLatch  CyclicBarrier
+减计数方式   加计数方式
+计算为0时释放所有等待的线程  计数达到指定值时释放所有等待线程
+计数为0时，无法重置      计数达到指定值时，计数置为0重新开始
+调用countDown()方法计数减一，调用await()方法只进行阻塞，对计数没任何影响   调用await()方法计数加1，若加1后的值不等于构造方法的值，则线程阻塞
+不可重复利用  可重复利用

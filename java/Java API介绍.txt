@@ -1,0 +1,134 @@
+java关键字
+strictfp   一旦使用了关键字strictfp来声明某个类、接口或者方法时，那么在这个关键字所声明的范围内所有浮点运算都是精确的，符合IEEE-754规范的。
+volatile	修饰的成员变量在每次被线程访问时，都强迫从共享内存中重读该成员变量的值。而且，当成员变量发生变化时，强迫线程将变化值回写到共享内存。这样在任何时刻，两个不同的线程总是看到某个成员变量的同一个值。
+transient   声明一个实例变量，当对象存储时，它的值不需要维持
+
+abstract	continue	for	new	switch
+assert***	default	goto*	package	synchronized
+boolean	do	if	private	this
+break	double	implements	protected	throw
+byte	else	import	public	throws
+case	enum****	inType annotationsstanceof	return	transient
+catch	extends	int	short	try
+char	final	interface	static	void
+class	finally	long	strictfp**	volatile
+const*	float	native	super	while
+*	 	not used
+**	 	added in 1.2
+***	 	added in 1.4
+****	 	added in 5.0
+
+
+基本数据类型
+数据类型	字节	默认值
+byte	1	0
+short	2　	0
+int	4	0
+long	8	0
+float	4	0.0f
+double	8	0.0d
+char	2	'\u0000'
+boolean	4	false
+
+
+String：
+　　1，是字符串常量，一旦创建就不能修改。对于已经存在了的String对象的修改都是重新创建一个新的对象，然后把新的值保存进去。
+　　2，String也是final类，不能被继承。
+　　3，而且String是对象而不是基本类型。
+　　4，string覆盖了equals方法和hashCode()方法。
+
+StingBuffer：
+　　1，是字符串可变对象，可以对字符串进行操作，修改字符串原有值时不会新建一个对象。
+　　2，执行效率较慢，但是线程安全
+　　3，StringBuffer没有覆盖equals方法和hashCode()方法。
+　　4，可以动态的构造字符数据，append（）方法。
+
+StringBuilder：
+　　1，也是字符串可变对象，同StringBuffer一样，可以对字符串进行操作，也不会新建对象。
+　　2，执行效率高效，但是线程不安全。
+
+
+类的实例化顺序，比如父类静态数据，构造函数，字段，子类静态数据，构造函数，字段，当new的时候，他们的执行顺序
+当创建类对象时，先初始化静态变量和静态块，然后是非静态变量和非静态代码块，然后是构造器。由于静态成员只会被初始化一次，所以如果静态成员已经被初始化过，将不会被再次初始化
+
+1）父类的静态成员；静态方法块；
+2）子类中的静态成员；静态方法块；
+3）父类中的成员变量；方法块；
+5）父类构造函数
+4）子类中的成员变量；方法块；
+6）子类构造函数
+
+
+用过哪些Map类，都有什么区别，HashMap是线程安全的吗,并发下使用的Map是什么，他们内部原理分别是什么，比如存储方式，hashcode，扩容，默认容量
+
+Map集合 HashMap/LinkedHashMap/TreeMap Hashtable
+
+1）HashMap
+特点：键无序，它根据键的HashCode值存储数据,根据键可以直接获取它的值，具有很快的访问速度，在Map 中插入、删除和定位元素，HashMap 是最好的选择。
+
+2）HashTable
+特点：线程安全，键不能为null，与HashMap类似，但效率较低，HashMap如果需要实现同步，可以使用Collections. synchronizedMap或ConcurrentHashMap
+
+3）TreeMap
+特点：默认按键的升序排序，可以定制
+
+4）LinkedHashMap
+特点：是HashMap的一个子类，键保存了插入的顺序，使用Iterator遍历时，得到的也是插入顺序的记录
+
+
+
+TreeMap和LinkedHashmap都是有序的。（TreeMap默认是key升序，LinkedHashmap默认是数据插入顺序）
+TreeMap是基于比较器Comparator来实现有序的。
+LinkedHashmap是基于链表来实现数据插入有序的。
+
+
+List(ArrayList、LinkedList、Vector、Stack)
+
+
+HashMap的主干是一个Entry数组。Entry是HashMap的基本组成单元，每一个Entry包含一个key-value键值对。
+简单来说，HashMap由数组+链表组成的，数组是HashMap的主体，链表则是主要为了解决哈希冲突而存在的，如果定位到的数组位置不含链表（当前entry的next指向null）,那么查找，添加等操作很快，仅需一次寻址即可；如果定位到的数组包含链表，对于添加操作，其时间复杂度为O(n)，首先遍历链表，存在即覆盖，否则新增；对于查找操作来讲，仍需遍历链表，然后通过key对象的equals方法逐一比对查找。所以，性能考虑，HashMap中的链表出现越少，性能才会越
+
+initialCapacity默认为16，loadFactory默认为0.75
+
+JDK1.8在JDK1.7的基础上针对增加了红黑树来进行优化。即当链表超过8时，链表就转换为红黑树，利用红黑树快速增删改查的特点提高HashMap的性能，其中会用到红黑树的插入、删除、查找等算法。
+
+
+
+ConcurrentHashMap为什么放弃了分段锁
+ConcurrentHashMap是由Segment数组结构和HashEntry数组结构组成.Segment是一种可重入锁ReentrantLock，在ConcurrentHashMap里扮演锁的角色，HashEntry则用于存储键值对数据。一个ConcurrentHashMap里包含一个Segment数组，Segment的结构和HashMap类似，是一种数组和链表结构， 一个Segment里包含一个HashEntry数组，每个HashEntry是一个链表结构的元素， 每个Segment守护者一个HashEntry数组里的元素,当对HashEntry数组的数据进行修改时，必须首先获得它对应的Segment锁
+
+
+
+
+
+
+
+
+
+------1. Set-------------
+TreeSet：基于红黑树实现，支持有序性操作，例如根据一个范围查找元素的操作。但是查找效率不如 HashSet，HashSet 查找的时间复杂度为 O(1)，TreeSet 则为 O(logN)。
+
+HashSet：基于哈希表实现，支持快速查找，但不支持有序性操作。并且失去了元素的插入顺序信息，也就是说使用 Iterator 遍历 HashSet 得到的结果是不确定的。
+
+LinkedHashSet：具有 HashSet 的查找效率，且内部使用双向链表维护元素的插入顺序。
+
+---------2. List---------
+ArrayList：基于动态数组实现，支持随机访问。
+
+Vector：和 ArrayList 类似，但它是线程安全的。
+
+LinkedList：基于双向链表实现，只能顺序访问，但是可以快速地在链表中间插入和删除元素。不仅如此，LinkedList 还可以用作栈、队列和双向队列。
+
+--------3. Queue-------------
+LinkedList：可以用它来实现双向队列。
+
+PriorityQueue：基于堆结构实现，可以用它来实现优先队列。
+
+-------Map-----------------------
+TreeMap：基于红黑树实现。
+
+HashMap：基于哈希表实现。
+
+Hashtable：和 HashMap 类似，但它是线程安全的，这意味着同一时刻多个线程可以同时写入 Hashtable 并且不会导致数据不一致。它是遗留类，不应该去使用它。现在可以使用 ConcurrentHashMap 来支持线程安全，并且 ConcurrentHashMap 的效率会更高，因为 ConcurrentHashMap 引入了分段锁。
+
+LinkedHashMap：使用双向链表来维护元素的顺序，顺序为插入顺序或者最近最少使用（LRU）顺序。

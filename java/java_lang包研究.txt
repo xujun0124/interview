@@ -1,0 +1,107 @@
+---java.lang---
+八种基本数据类型
+类类型	原生类型（primitive）	代表意义
+Boolean	boolean	布尔
+Character	char	单个Unicode字符，占用两个字节，例如'a','中'，范围0-65535
+Byte	byte	8位有符号整型
+Short	short	16位有符号整型
+Integer	int	32位有符号整型
+Long	long	64位有符号整型
+Float	float	单精度浮点
+Double	double	双精度浮点
+
+
+Object
+默认所有的类都继承自Object，Object没有Property，只有Method，其方法大都是native方法（也就是用其他更高效语言，一般是c实现好了的），
+Object没有实现clone()，实现了hashCode()，哈希就是对象实例化后在堆内存的地址，用“==”比较两个对象，实际就是比较的内存地址是否是一个，也就是hashCode()是否相等，
+默认情况下，对象的equals()方法和==符号是一样的，都是比较内存地址，但是有些对象重写了equals()方法，比如String，使其达到比较内容是否相同的效果
+另外两个方法wait()和notify()是和多线程编程相关的，多线程里面synchronized实际就是加锁，默认是用this当锁，当然也可以用任何对象当锁，wait()上锁，线程阻塞，notify()开锁，收到这个通知的线程运行。
+
+
+
+Class
+
+ClassLoader
+类装载器是用来把类(class)装载进JVM的，JVM规范定义了两种类型的类装载器：启动内装载器 (bootstrap) 和用户自定义装载器 (user-defined class loader) 。
+JVM在运行时会产生三个ClassLoader：Bootstrap ClassLoader、Extension ClassLoader和App ClassLoader.。
+Bootstrap是用C++编写的，我们在Java中看不到它，是null，是JVM自带的类装载器，用来装载核心类库，如java.lang.*等。
+AppClassLoader 的 Parent 是ExtClassLoader ，而 ExtClassLoader 的 Parent 为 Bootstrap ClassLoader 。 
+Java 提供了抽象类 ClassLoader ，所有用户自定义类装载器都实例化自 ClassLoader 的子类。 
+
+
+Exception和Error
+都继承自Throwable对象，Exception分为两类，RuntimeException（运行时异常，unchecked）和一般异常（checked），Error是比较严重的错误，也是unchecked。
+简单地讲，checked是必须用try/catch 或者throw处理的，可以在执行过程中恢复的，比如java.io.FileNotFoundException；而unchecked异常则是不需要try/catch处理的，比如java.lang.NullPointerException。
+在比较流行的语言中，Java是唯一支持checked异常，要求我们必须进行处理的语言，这有利有弊。
+
+
+
+Compiler
+
+Runtime
+java.lang包里有很多运行时环境相关的类，可以查看运行时环境的各种信息，比如内存、锁、安全、垃圾回收等等。见过如下钩子代码，在JVM关闭时，执行一些不好在程序计算过程中进行的资源释放工作，如下：
+关于这个推出钩子，实际是java.lang包种的以下3个类配合完成的：Runtime、Shutdown、ApplicationShutdownHooks。
+
+
+---java.lang.annotation---
+主要在java.lang.annotation包中，注解类用@interface来进行定义，注解类的作用范围可以是方法、属性、包等，作用失效可以是Source、Runtime、Class。
+注解本身不做任何事情，只是像xml文件一样起到配置作用。注解代表的是某种业务意义，spring中@Resource注解简单解析：首先解析类的所有属性，判断属性上面是否存在这个注解，如果存在这个注解，再根据搜索规则来取得这个bean，然后通过反射注入。
+
+注解有如下规则：
+
+1）所有的注解类都隐式继承于 java.lang.annotation.Annotation，注解不允许显式继承于其他的接口。
+
+2）注解不能直接干扰程序代码的运行，无论增加或删除注解，代码都能够正常运行。Java语言解释器会忽略这些注解，而由第三方工具负责对注解进行处理。
+
+3）注解的成员以无入参、无抛出异常的方式声明；可以通过default为成员指定一个默认值；成员类型是受限的，合法的类型包括primitive及其封装类、String、Class、enums、注解类型，以及上述类型的数组类型；注解类可以没有成员，没有成员的注解称为标识注解，解释程序以标识注解存在与否进行相应的处理。
+
+
+class
+classloader
+object
+runtime
+string
+stringbuild
+stringbuffer
+String是不可变类，每次在String对象上的操作都会生成一个新的对象；StringBuffer和StringBuilder则允许在原来对象上进行操作，而不用每次增加对象；StringBuffer是线程安全的，但效率较低，而StringBuilder则不是，效率最高
+
+thread
+
+ThreadLocal
+ThreadLocal是java.lang下面的一个类，是用来解决java多线程程序中并发问题的一种途径；通过为每一个线程创建一份共享变量的副本来保证各个线程之间的变量的访问和修改互相不影响；
+
+
+----java.lang.ref---
+StrongReference, SoftReference, WeakReference 以及 PhantomReference 
+引用类型	取得目标对象方式	垃圾回收条件	是否可能内存泄漏
+强引用	直接调用	不回收	可能
+软引用		视内存情况回收	不可能
+弱引用	通过 get() 方法	永远回收	不可能
+实现虚引用	无法取得	不回收	可能
+ 
+ 
+类型	是否抛出异常	示例代码	运行结果
+StrongReference	抛出异常	见清单 6	Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+SoftReference	不抛异常，之前的引用自动清空并返回 null	见清单 7	null
+WeakReference	同上	见清单 8	null
+PhantomReference	抛出异常	见清单 9	Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+
+
+
+---java.lang.invoke---
+
+---java.lang.reflect---
+java.lang.reflect包中有3个类Field,Method和Constructor分别用于描述类的域（成员变量），方法和构造器。
+
+Class类中的getField()，getMethod()，getConstructor()方法分别返回类提供的公有域，公有方法和公有构造器。
+
+Class类中的getDeclaredField()，getDeclaredMethod()，getDeclaredMethodlaredConstructor()方法分别返回类提供的私有域，私有方法和私有构造器。
+
+
+
+---java.lang.instrument----
+ClassDefinition
+ClassFileTransformer
+Instrumentation
+
+

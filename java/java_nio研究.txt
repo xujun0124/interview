@@ -1,0 +1,82 @@
+NIO包（Java.nio.*）引入了四个关键的抽象数据类型，它们共同解决传统的I/O类中的一些问题。
+1． Buffer：它是包含数据且用于读写的线形表结构。其中还提供了一个特殊类用于内存映射文件的I/O操作。
+2． Charset：它提供Unicode字符串影射到字节序列以及逆影射的操作。
+3． Channels：包含socket，file和pipe三种管道，它实际上是双向交流的通道。
+4． Selector：它将多元异步I/O操作集中到一个或多个线程中（它可以被看成是Unix中select（）函数或Win32中WaitForSingleEvent（）函数的面向对象版本）。
+
+
+Channel 和 buffer 是 NIO 是两个最基本的数据类型抽象。
+
+Buffer:
+
+–        是一块连续的内存块。
+
+–        是 NIO 数据读或写的中转地。
+
+Channel:
+
+–        数据的源头或者数据的目的地
+
+–        用于向 buffer 提供数据或者读取 buffer 数据 ,buffer 对象的唯一接口。
+
+–         异步 I/O 支持
+
+一个 buffer 主要由 position,limit,capacity 三个变量来控制读写的过程。此三个变量的含义见如下表格：
+
+参数
+
+写模式   
+
+读模式
+
+position
+
+当前写入的单位数据数量。
+
+当前读取的单位数据位置。
+
+limit
+
+代表最多能写多少单位数据和容量是一样的。
+
+代表最多能读多少单位数据，和之前写入的单位数据量一致。
+
+capacity
+
+buffer 容量
+
+buffer 容量
+
+Buffer 常见方法：
+
+flip(): 写模式转换成读模式
+
+rewind() ：将 position 重置为 0 ，一般用于重复读。
+
+clear() ：清空 buffer ，准备再次被写入 (position 变成 0 ， limit 变成 capacity) 。
+
+compact(): 将未读取的数据拷贝到 buffer 的头部位。
+
+mark() 、 reset():mark 可以标记一个位置， reset 可以重置到该位置。
+
+Buffer 常见类型： ByteBuffer 、 MappedByteBuffer 、 CharBuffer 、 DoubleBuffer 、 FloatBuffer 、 IntBuffer 、LongBuffer 、 ShortBuffer 。
+
+channel 常见类型 :FileChannel 、 DatagramChannel(UDP) 、 SocketChannel(TCP) 、 ServerSocketChannel(TCP)
+
+非阻塞的原理
+
+把整个过程切换成小的任务，通过任务间协作完成。
+
+由一个专门的线程来处理所有的 IO 事件，并负责分发。
+
+事件驱动机制：事件到的时候触发，而不是同步的去监视事件。
+
+线程通讯：线程之间通过 wait,notify 等方式通讯。保证每次上下文切换都是有意义的。减少无谓的进程切换。
+
+Selector
+
+异步 IO 的核心类，它能检测一个或多个通道 (channel) 上的事件，并将事件分发出去。
+
+使用一个 select 线程就能监听多个通道上的事件，并基于事件驱动触发相应的响应。而不需要为每个 channel 去分配一个线程。
+
+ 

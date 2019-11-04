@@ -1,0 +1,52 @@
+java.lang
+java.io
+java.util
+java.sql
+java.nio
+java.text
+java.Math
+java.net
+java.security
+javax,naming
+org.w3c.dom
+
+java.io——通过数据流、序列化和文件系统提供系统输入和输出，这个是重点。凡是各种文件和流的操作基本上离不开它。
+java.lang——提供java编程的基础类。基础中的基础。不用多说。基本上可以说任何java程序都离不开这个包。而这个包也是java源码中（包括jsp等）默认的已导入的包。
+java.lang.annotation ——为java注释设施提供 库支持。注释设施是什么？简单说就是java源码中那些@相关的东西
+java.lang.instrument java ——代理检测运行在 JVM 上的程序的服务。底层的东西,在此略去
+java.lang.management——提供管理接口，用于监视和管理 Java 虚拟机以及 Java 虚拟机在其上运行的操作系统。
+java.lang.ref ——提供了引用对象类，支持在某种程度上与垃圾回收器之间的交互。 ref是Reference的意思，即表明了它是java中各种引用：软 引用、弱 引用和虚 引用啊，也就和gc挂钩了
+ 
+java.lang.reflect ——提供类和接口，以获得关于类和对象的反射信息。 java反射机制很有用，在某些框架中经常可以看到他的身影。
+java.math ——提供用于执行任意精度整数算法 (BigInteger) 和任意精度小数算法 (BigDecimal) 的类。 其实也就3个类加一枚举，最有用的当然就是BigDecimal。要注意它和java基础类型中的数值类型int、long、float、double等的区别，它提供的是“任意精度”！
+java.nio ——定义作为数据容器的缓冲区，并提供其他 NIO 包的概述 主要的类就是Buffer 缓冲区 。缓冲区是一个比较难理解的概念。官方说明是：缓冲区 是一个固定数据量的指定基本类型的数据容器。除内容之外，缓冲区还具有位置 和界限，其中位置是要读写的下一个元素的索引，界限是第一个应该读写的元素的索引。基本 Buffer 类定义了这些属性以及清除、反转 和重绕 方法，用以标记 当前位置，以及将当前位置重置 为前一个标记处——要多看几遍才行啊。
+java.rmi——即大名鼎鼎的远程方法调用 (Remote Method Invocation)。它是一种机制，能够让在某个 Java 虚拟机上的对象调用另一个 Java 虚拟机中的对象上的方法 。其中重要的有： Remote Remote 接口用于标识其方法可以从非本地虚拟机上调用的接口 
+ 
+java.security ——为安全框架提供类和接口。安全从来都是一个很重要的问题，这个包是java对其支持的最底层的一个吧。用得多就是Key啊，PrivateKey、PublicKey等，很多的java安全框架其实都是基于这个完成的。
+java.sql ——提供使用 JavaTM 编程语言访问并处理存储在数据源（通常是一个关系数据库）中的数据的 API 。它的作用自然不用多说。就像“没有GCD就没有新中国”一样，没有这个包则无法谈起jdbc，odbc啊等，其中类和接口不多，却是个个非常有用。分析发现，其中大多数都是接口，说明他只是一个规范。其实际中作用的发挥离不开具体厂商的jdbc的支持啊。这就是我们常说的“连接数据库的时候必须导入相应的驱动”！。jdbc编程啊jdbc，其实就是说这个，可怜的我的当年啊，还被人嘲笑啊！工作了一两年才弄明白这个这个概念。唉
+java.text——提供与自然语言无关的方式来处理文本、日期、数字和消息的类和接口 ——？ 我感觉是很难理解了，与自然语言无关？怎么我看其中很多类的构造方法里面都有Locale？不说这个，其实里面主要提供了很多的处理文本、日期、数字和消息的方法，让我们有足够的方便来处理。不过其中api难以记住，个人就是经常忘记，然后再看，好久不用，又全忘记...当然，有时候我们也可以自己实现，所以我们项目里面经常看到各种Utils类啊。。。
+java.util——主要就是集合框架+时间、国际化等使用类
+ 
+java完了之后就是javax了，x即拓展的意思。感觉就是提供很多增强的功能，或者是全新的功能吧。
+javax.crypto——为加密操作提供类和接口 个人用过的就是CipherInputStream，Cipher ，SecretKey ，CipherOutputStream KeyGenerator啊等了，感觉java.security里面也有一些类似的接口，
+javax.imageio—— Java Image I/O API 的主要包 ，没什么印象啊，不说了
+javax.management ——提供 Java Management Extensions 的核心类。 即有名的JMX，注意区分JMS
+javax.naming ——为访问命名服务提供类和接口。 包括jndi啊，ldap啊等，其实是一个很强大的api
+javax.net—— 提供用于网络应用程序的类。 写过任何网络相关的都不会忘记这个包，如简单的聊天程序等。其中当然包括很多内容，比如各种数据传输啊、ssl啊等
+javax.print 为 JavaTM Print Service API 提供了主要类和接口。 这个是比较高级的应用了，因为一般人都用不上吧。不过我倒是印象深刻，有一次公司评级考试就是要我用java操作打印机，问我怎么写相关程序，我东说西说，就是不知道有这个包，自然也说不到这个点上来！唉。
+javax.rmi ——包含 RMI-IIOP 的用户 API，java.rmi的增强？其实就一个类PortableRemoteObject，先不管它。
+javax.security 不太了解
+javax.sound
+javax.sql ————这个相当重要，不得不提，其中提供的很多接口都是jdbc必须的
+javax.swing ——提供一组“轻量级”（全部是 Java 语言）组件，尽量让这些组件在所有平台上的工作方式都相同。 不多说，现在用得很少了吧
+javax.transaction
+javax.xml.xxxxxxxx—— XML 规范定义 或 简单实现
+ 
+org.omg.xxxx  CORBA 等相关的，Common Object Request Broker Architecture,公共对象请求代理体系结构，通用对象请求代理体系结构，好难懂的术语啊！其实简单说， CORBA体系结构是对象管理组织（OMG）为解决分布式处理环境(DCE)中，硬件和软件系统的互连而提出的一种解决方案。
+ 
+org.w3c.dom 和 org.w3c.sax,最原始的两种处理XML 文档的方法吧，以前学过，后面倒是很少用到
+ 
+此外，还有一些包
+重要的有
+javax.script —— jsp解释spi中有这个。其中的ScriptEngine相信大家都见过。
+javax.annotation ——注解相关的api。

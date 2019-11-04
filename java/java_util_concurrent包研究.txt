@@ -1,0 +1,225 @@
+---------java.util.concurrent----------------------
+Queue 先进先出 FIFO    PriorityQueue 优先级队列
+ArrayBlockingQueue, ConcurrentLinkedQueue, DelayQueue, LinkedBlockingQueue, PriorityBlockingQueue, PriorityQueue, SynchronousQueue, BlockingQueue
+
+deque，全名double-ended queue,同时从两端来添加、删除元素,当成队列使用、也可以当成栈使用,	ArrayDeque基于数组的无界双端队列，做队列和栈都很合适
+ArrayDeque, LinkedBlockingDeque, LinkedList ,BlockingDeque ,ConcurrentLinkedDeque
+
+
+
+LinkedTransferQueue  extend  TransferQueue
+
+ConcurrentHashMap<K, V> extends AbstractMap<K, V>        implements ConcurrentMap<K, V>, Serializable
+ConcurrentMap<K, V> extends Map<K, V>
+ConcurrentNavigableMap<K,V>    extends ConcurrentMap<K,V>, NavigableMap<K,V>
+ConcurrentSkipListMap<K,V> extends AbstractMap<K,V>    implements ConcurrentNavigableMap<K,V>
+ConcurrentSkipListSet<E>    extends AbstractSet<E>    implements NavigableSet<E>
+
+CopyOnWriteArraySet<E> extends AbstractSet<E>
+CopyOnWriteArrayList<E>    implements List<E>, RandomAccess
+
+
+Executor    Executor接口很简单，只有一个execute方法
+ExecutorService extends Executor 		ExecutorService是Executor的子接口，增加了一些常用的对线程的控制方法，之后使用线程池主要也是使用这些方法。
+
+AbstractExecutorService implements ExecutorService     抽象类
+ThreadPoolExecutor extends AbstractExecutorService		是线程池的真正实现，他通过构造方法的一系列参数，来构成不同配置的线程池
+ThreadFactory   创建线程工厂
+
+Executors   newFixedThreadPool
+
+CompletionService<V>		的主要功能就是一边生成任务，一边获取任务的返回值。让两件事分开执行，任务之间不会互相阻塞
+ExecutorCompletionService<V> implements CompletionService<V>
+https://blog.csdn.net/qq_25806863/article/details/71743659
+
+CompletableFuture impl  CompletionStage
+CompletableFuture类实现了CompletionStage和Future接口。Future是Java 5添加的类，用来描述一个异步计算的结果，但是获取一个结果时方法较少,要么通过轮询isDone，确认完成后，调用get()获取值，要么调用get()设置一个超时时间。但是这个get()方法会阻塞住调用线程，这种阻塞的方式显然和我们的异步编程的初衷相违背。
+为了解决这个问题，JDK吸收了guava的设计思想，加入了Future的诸多扩展功能形成了CompletableFuture
+
+
+
+Callable<V> 
+Future<V>
+RunnableFuture<V> extends Runnable, Future<V> 		作为 Runnable 的 Future。成功执行 run 方法可以完成 Future 并允许访问其结果。
+FutureTask<V> implements RunnableFuture<V> 
+
+Fork/Join框架的核心实现类是ForkJoinPool线程池，其它核心组件包括：ForkJoinTask（任务）、ForkJoinWorkerThread（工作线程）、WorkQueue（任务队列）
+
+ForkJoinPool
+ForkJoinTask
+ForkJoinWorkerThread
+CountedCompleter	一个在没有其他action等待的情况下，会执行一个完成action的 ForkJoinTask
+
+RecursiveAction		无返回值任务
+RecursiveTask		有返回值类型
+
+RejectedExecutionHandler			拒绝策略
+当Executor已经关闭（即执行了executorService.shutdown()方法后），并且Executor将有限边界用于最大线程数量和工作队列容量，且已经饱和时，在方法execute()中提交的新任务将被拒绝。
+在以上述情况下，execute 方法将调用其 RejectedExecutionHandler 的 rejectedExecution
+
+Delayed extends Comparable<Delayed>
+一种混合风格的接口，用来标记那些应该在给定延迟时间之后执行的对象。
+此接口的实现必须定义一个 compareTo 方法，该方法提供与此接口的 getDelay 方法一致的排序
+
+ScheduledExecutorService extends ExecutorService
+ScheduledFuture<V> extends Delayed, Future<V>  一个延迟的、结果可接受的操作，可将其取消。通常已安排的 future 是用 ScheduledExecutorService 安排任务的结果。
+
+RunnableScheduledFuture<V> extends RunnableFuture<V>, ScheduledFuture<V>
+
+ScheduledThreadPoolExecutor        extends ThreadPoolExecutor        implements ScheduledExecutorService
+ 
+TimeUnit			TimeUnit.MINUTES.sleep(4);  // sleeping for 4 minutes
+
+ThreadLocalRandom	当应用程序期望在多个线程或ForkJoinTasks中使用随机数时
+对于并发访问，使用TheadLocalRandom代替Math.random()可以减少竞争，从而获得更好的性能
+
+
+Executor
+执行器接口，也是最顶层的抽象核心接口， 分离了任务和任务的执行。
+
+ExecutorService
+在Executor的基础上提供了执行器生命周期管理，任务异步执行等功能。
+
+ScheduledExecutorService
+在ExecutorService基础上提供了任务的延迟执行/周期执行的功能。
+
+Executors
+生产具体的执行器的静态工厂
+
+ThreadFactory
+线程工厂，用于创建单个线程，减少手工创建线程的繁琐工作，同时能够复用工厂的特性。
+
+AbstractExecutorService
+ExecutorService的抽象实现，为各类执行器类的实现提供基础。
+
+ThreadPoolExecutor
+线程池Executor，也是最常用的Executor，可以以线程池的方式管理线程。
+
+ScheduledThreadPoolExecutor
+在ThreadPoolExecutor基础上，增加了对周期任务调度的支持。
+
+ForkJoinPool
+Fork/Join线程池，在JDK1.7时引入，时实现Fork/Join框架的核心类。
+
+------------------------------
+
+CountDownLatch　　CountDownLatch是一个同步辅助类，在完成一组正在其他线程中执行的操作之前，它允许一个或多个线程一直等待。 
+CyclicBarrier	CyclicBarrier是一个同步辅助类，允许一组线程互相等待，直到到达某个公共屏障点 (common barrier point)。因为该 barrier 在释放等待线程后可以重用，所以称它为循环 的 barrier
+Semaphoref	　　Semaphore是一个计数信号量，它的本质是一个"共享锁"。
+CyclicBarrier和CountDownLatch的区别是：
+　　(01) CountDownLatch的作用是允许1或N个线程等待其他线程完成执行；而CyclicBarrier则是允许N个线程相互等待。
+　　(02) CountDownLatch的计数器无法被重置；CyclicBarrier的计数器可以被重置后使用，因此它被称为是循环的barrier。
+
+
+Exchanger<V> 	Exchanger可以在两个线程之间交换数据，只能是2个线程，他不支持更多的线程之间互换数据
+
+Phaser
+Phaser类的功能和CyclicBarrier、CountDownLatch的有很多类似的地方，例如线程互相等待，等待某个线程完成再进行其他任务，这在Phaser都可以实现，而Phaser却更加的灵活，因为它可以动态的注册线程数量，取消注册数量，这可以给我们带来更多的控制。
+
+    Phaser有几个重要的方法：
+
+        1.arrive:该方法简单的说就是记录到达的线程数，有点像CountDownLatch的countDown，该方法调用后不会等待其他线程
+
+        2.arriveAwaitAdvance:该方法和arrive一样，但是该方法调用会等待其他未到达的线程
+
+        3.arriveAndDeregister:该方法和arrive一样，但是该方法调用后会减少注册的数量
+
+        4.register:该方法可以动态的注册一个线程数量
+--------------------- 
+
+
+----java.util.concurrent.atomic;----
+AtomicInteger/AtomicLong/AtomicBoolean/AtomicReference是关于对变量的原子更新，
+
+AtomicIntegerArray/AtomicLongArray/AtomicReferenceArray是关于对数组的原子更新
+
+AtomicIntegerFieldUpdater<T>/AtomicLongFieldUpdater<T>/AtomicReferenceFieldUpdater<T,V>   是基于反射的原子更新字段的值。
+
+----------
+https://blog.csdn.net/zhaozhirongfree1111/article/details/72781758
+ABA问题：简单讲就是多线程环境，2次读写中一个线程修改A->B，然后又B->A，另一个线程看到的值未改变，又继续修改成自己的期望值。当然我们如果不关心过程，只关心结果，那么这个就是无所谓的ABA问题。
+为了解决ABA问题
+AtomicMarkableReference<V> 
+AtomicStampedReference<V> 
+AtomicMarkableReference跟AtomicStampedReference差不多， 
+AtomicStampedReference是使用pair的int stamp作为计数器使用，AtomicMarkableReference的pair使用的是boolean mark。 
+还是那个水的例子，AtomicStampedReference可能关心的是动过几次，AtomicMarkableReference关心的是有没有被人动过，方法都比较简单。
+-------------------
+DoubleAccumulator、LongAccumulator、DoubleAdder、LongAdder是JDK1.8新增的部分，是对AtomicLong等类的改进。比如LongAccumulator与LongAdder在高并发环境下比AtomicLong更高效。本文以LongAdder为例，学习这些类。
+
+API中是这么介绍的：LongAdder中会维护一组（一个或多个）变量，这些变量加起来就是要以原子方式更新的long型变量。当更新方法add(long)在线程间竞争时，该组变量可以动态增长以减缓竞争。方法sum()返回当前在维持总和的变量上的总和。与AtomicLong相比，LongAdder更多地用于收集统计数据，而不是细粒度的同步控制。在低并发环境下，两者性能很相似。但在高并发环境下，LongAdder有着明显更高的吞吐量，但是有着更高的空间复杂度。
+
+LongAccumulator是LongAdder的增强版。LongAdder只能针对数值的进行加减运算，而LongAccumulator提供了自定义的函数操作
+LongAccumulator内部原理和LongAdder几乎完全一样，都是利用了父类Striped64的longAccumulate方法
+
+DoubleAccumulator
+DoubleAdder
+LongAccumulator
+LongAdder
+
+
+
+----java.util.concurrent.locks----
+AbstractOwnableSynchronizer
+AbstractQueuedLongSynchronizer    extends AbstractOwnableSynchronizer
+AbstractQueuedSynchronizer    extends AbstractOwnableSynchronizer
+
+AbstractQueuedSynchronizer就是被称之为AQS的类，它是一个非常有用的超类，可用来定义锁以及依赖于排队阻塞线程的其他同步器；ReentrantLock，ReentrantReadWriteLock，CountDownLatch，CyclicBarrier和Semaphore等这些类都是基于AQ
+S类实现的。AbstractQueuedLongSynchronizer 类提供相同的功能但扩展了对同步状态的 64 位的支持。两者都扩展了类 AbstractOwnableSynchronizer（一个帮助记录当前保持独占同步的线程的简单类
+
+interface Condition
+interface Lock
+interface ReadWriteLock
+condition需要和Lock联合使用，它的作用是代替Object监视器方法，可以通过await(),signal()来休眠/唤醒线程。
+Condition 接口描述了可能会与锁有关联的条件变量。这些变量在用法上与使用 Object.wait 访问的隐式监视器类似，但提供了更强大的功能。需要特别指出的是，单个 Lock 可能与多个 Condition 对象关联。为了避免兼容性问题，Condition 方法的名称与对应的 Object 版本中的不同
+
+
+LockSupport
+　LockSupport提供“创建锁”和“其他同步类的基本线程阻塞原语”。 
+　LockSupport的功能和"Thread中的Thread.suspend()和Thread.resume()有点类似"，LockSupport中的park() 和 unpark() 的作用分别是阻塞线程和解除阻塞线程。但是park()和unpark()不会遇到“Thread.suspend 和 Thread.resume所可能引发的死锁”问题。
+
+ReentrantLock implements Lock
+ReentrantReadWriteLock implements ReadWriteLock
+
+ReentrantReadWriteLock 在沒有任何读写锁时，才可以取得写入锁，这可用于实现了悲观读取（Pessimistic Reading），即如果执行中进行读取时，经常可能有另一执行要写入的需求，为了保持同步，ReentrantReadWriteLock 的读取锁定就可派上用场。
+
+
+StampedLock
+StampedLock控制锁有三种模式（写，读，乐观读），一个StampedLock状态是由版本和模式两个部分组成，锁获取方法返回一个数字作为票据stamp，它用相应的锁状态表示并控制访问，数字0表示没有写锁被授权访问。在读锁上分为悲观锁和乐观锁。
+
+=================================
+
+http://xstarcd.github.io/wiki/Java/JVM_Heap_Non-heap.html
+
+
+
+
+CAS 
+CAS的思想很简单：三个参数，一个当前内存值V、旧的预期值A、即将更新的值B，当且仅当预期值A和内存值V相同时，将内存值修改为B并返回true，否则什么都不做，并返回false。
+Unsafe，是CAS的核心类，由于Java方法无法直接访问底层系统，需要通过本地（native）方法来访问，Unsafe相当于一个后门，基于该类可以直接操作特定内存的数据。
+利用CAS保证了对于value的修改的并发安全，继续深入看看Unsafe类中的compareAndSwapInt方法实现
+Unsafe类中的compareAndSwapInt，是一个本地方法，该方法的实现位于unsafe.cpp中
+
+CAS存在一个很明显的问题，即ABA问题。
+java并发包中提供了一个带有标记的原子引用类AtomicStampedReference，它可以通过控制变量值的版本来保证CAS的正确性
+
+
+https://github.com/Snailclimb/JavaGuide/blob/master/docs/java/Multithread/AQS.md
+AQS
+核心思想是，如果被请求的共享资源空闲，则将当前请求资源的线程设置为有效的工作线程，并且将共享资源设置为锁定状态。如果被请求的共享资源被占用，那么就需要一套线程阻塞等待以及被唤醒时锁分配的机制，这个机制AQS是用CLH队列锁实现的，即将暂时获取不到锁的线程加入到队列中。
+
+AQS定义两种资源共享方式
+
+Exclusive（独占）：只有一个线程能执行，如ReentrantLock。又可分为公平锁和非公平锁：
+公平锁：按照线程在队列中的排队顺序，先到者先拿到锁
+非公平锁：当线程要获取锁时，无视队列顺序直接去抢锁，谁抢到就是谁的
+Share（共享）：多个线程可同时执行，如Semaphore/CountDownLatch。Semaphore、CountDownLatCh、 CyclicBarrier、ReadWriteLock 我们都会在后面讲到
+
+
+ 
+实现:
+CountDownLatch
+ReentrantLock
+ReentrantReadWriteLock
+Semaphore
+ThreadPoolExecutor
